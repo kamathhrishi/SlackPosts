@@ -23,10 +23,3 @@ module.exports.AddUser=function(user,callback){
         users.create(user,callback);
 
 }
-
-//function to get users from Database
-module.exports.GetUser=function(user,callback){
-
-        users.find(user,callback);
-
-}

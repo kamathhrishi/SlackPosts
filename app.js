@@ -51,6 +51,7 @@ app.get('/Register',function(req,res){
 //Post request that saves users information onto a database
 app.post('/AddUser',urlencodedParser,function(req,res){
 
+
   if(req.body.username.length>5){
 
       if(req.body.pswd.length>7){
@@ -97,24 +98,36 @@ app.post('/Login',urlencodedParser,function(req,res){
 
   Dash_posts=[];
 
-  users.GetUser({UserName:req.body.login_user,password:req.body.login_pwd},function(err,user){
+  users.findOne({UserName:req.body.login_user,password:req.body.login_pwd},function(err,user_valid){
 
             if(err){
 
                 throw err;
 
             }
-            LoggedInUser=user;
+
+            if(user_valid){
+            LoggedInUser=user_valid;
             console.log("Logged in?");
 
             Posts.find({}).then(function(posts){
 
-                 Login=true;
-                 res.render('Dash',{Dash_Posts:posts});
+
+                  console.log(user_valid);
+                  Login=true;
+                  res.render('Dash',{Dash_Posts:posts,UserName:req.body.login_user});
+
 
             })
+          }
+          else{
+
+                 res.render('Index',{Error_Message:"Invalid login Credentials!"});
+
+          }
 
   });
+
 
 });
 
@@ -142,16 +155,10 @@ app.get('/Logout',function(req,res){
         Login=false;
         LoggedInUser=null;
 
-        if(Login==true){
 
-                     res.render('Index',{Error_Message:""});
+        res.render('Index',{Error_Message:""});
 
-        }
-        else{
 
-                     res.render('Index',{Error_Message:"You must first login to logout :P "});
-
-        }
 
 });
 
@@ -201,7 +208,7 @@ if(Login==true){
             console.log(LoggedInUser);
             Posts.find({}).then(function(posts){
 
-                  res.render('Dash',{Dash_Posts:posts});
+                  res.render('Dash',{Dash_Posts:posts,UserName:LoggedInUser[0].UserName});
 
             })
 
@@ -237,7 +244,7 @@ app.get('/Posts',function(req,res){
 
                Posts.find({}).then(function(posts){
 
-                     res.render('Dash',{Dash_Posts:posts});
+                     res.render('Dash',{Dash_Posts:posts,UserName:LoggedInUser[0].UserName});
 
                });
 
