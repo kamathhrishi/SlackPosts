@@ -1,9 +1,10 @@
 
-
+//Import required dependency
 const mongoose=require('mongoose');
 
-const Schema=mongoose.Schema;
 
+//Define Schema of Posts
+const Schema=mongoose.Schema;
 var PostsSchema=new Schema({
 
      User:String,
@@ -14,19 +15,18 @@ var PostsSchema=new Schema({
 
 });
 
-
+//Mongoose Instance to allow communication with MongoDB collection posts
 var posts=module.exports.posts=mongoose.model('posts',PostsSchema);
-
 module.exports=posts;
 
+//function to add posts to Database
 module.exports.AddPost=function(user,callback){
-
 
         posts.create(user,callback);
 
-
 }
 
+//function to get posts from Database
 module.exports.GetPosts=function(callback){
 
 

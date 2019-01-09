@@ -1,21 +1,37 @@
 
+//Import required dependencies
 const express=require('express');
 const mongoose=require('mongoose');
 const bodyParser=require('body-parser');
 
 const Database_Connection='mongodb://localhost:27017/BLOG';
+
+//Port from which the application will run
 const PORT=3000;
 
+//Connect to MongoDB Database
 mongoose.connect(Database_Connection, {useNewUrlParser: true});
+
+//MongoDB Database Collections retrived by mongoose
 users=require('./Models/Users');
 Posts=require('./Models/Posts');
 
+//Express Object with EJS view view engine
 var app=express();
 app.set('view engine','ejs');
 
+app.use('/img',express.static('img'));
+
+//Check whether user has logged in
+var Login=false;
+
+//Get details of logged in user
+var LoggedInUser=false;
+
+//Body parser for getting form submission data
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-
+//Default view rendered
 app.get('/',function(req,res){
 
 
@@ -24,83 +40,105 @@ app.get('/',function(req,res){
 
 });
 
+//Post request that saves users information onto a database
 app.post('/AddUser',urlencodedParser,function(req,res){
 
   users.AddUser({UserName:req.body.username,password:req.body.pswd,title:req.body.title},function(err,user){
 
              if(err){
 
-
                 throw err;
 
-
              }
-
-
   });
-
 
 });
 
+//Post request which checks if given UserName and password combination exists
 app.post('/Login',urlencodedParser,function(req,res){
 
   Dash_posts=[];
+
   users.GetUser({UserName:req.body.login_user,password:req.body.login_pwd},function(err,user){
 
             if(err){
 
                 throw err;
 
-
             }
+            LoggedInUser=user;
+            console.log("Logged in?");
 
-               Posts.find({}).then(function(posts){
+            Posts.find({}).then(function(posts){
 
+                 Login=true;
+                 res.render('Dash',{Dash_Posts:posts});
 
-                     res.render('Dash',{Dash_Posts:posts});
-
-               })
-
-
+            })
 
   });
 
 });
 
+//Renders view which allows users to create an post
 app.get('/CreatePost',function(req,res){
 
+  if(Login==true){
 
-  res.render('CreatePost');
+        res.render('CreatePost');
 
+  }
+
+  else{
+
+        res.render('Index');
+        alert("You must first login");
+
+  }
 
 });
 
-app.get('/Posts',function(req,res){
+//Renders a spefic blogpost from database when a specified blogpost is clicked
+app.get('/UserPost',function(req,res){
 
-    Posts.find(req.query).then(function(posts){
+  if(Login==true){
+
+    if(req.query){
+
+       Posts.find(req.query).then(function(posts){
 
              console.log("Found it! YASS");
-             res.render('BlogPost',{Post_Title:posts[0].title,Post_Content:posts[0].content});
+             res.render('BlogPost',{Post_Title:posts[0].title,Post_Content:posts[0].content,User:posts[0].User,UserTitle:posts[0].UserTitle,date:posts[0].date});
 
+       });
 
-    });
+    }
+
+   }
+
+ else{
+
+   res.render('Index');
+   alert("You must first login");
+
+ }
+
 
 });
 
+//Post request made when user submits a blogpost
 app.post('/CreatePost',urlencodedParser,function(req,res){
 
-
-  console.log(req.body);
-  Posts.AddPost({User:"LOL",UserTitle:req.body.post_title,title:req.body.post_title,content:req.body.post_body},function(err,post){
+if(Login==true){
+  Posts.AddPost({User:LoggedInUser[0].UserName,UserTitle:LoggedInUser[0].title,title:req.body.post_title,content:req.body.post_body},function(err,post){
 
             if(err){
 
                 throw err;
 
-
             }
+            console.log(LoggedInUser);
             Posts.find({}).then(function(posts){
-
 
                   res.render('Dash',{Dash_Posts:posts});
 
@@ -108,26 +146,36 @@ app.post('/CreatePost',urlencodedParser,function(req,res){
 
 
   });
+}
+else{
 
+  res.render('Index');
+  alert("You must first login");
+
+}
 });
+
+//Renders all posts view
 
 app.get('/Posts',function(req,res){
 
-
-               Dash_posts=[];
+           if(Login==true){
 
                Posts.find({}).then(function(posts){
 
+                     res.render('Dash',{Dash_Posts:posts});
 
-                     Dash_posts.push(posts);
-                     res.render('Posts',{Dash_Posts:Dash_posts});
+               });
 
-               })
+             }
+             else{
 
+               res.render('Index');
+               alert("You must first login");
 
+             }
 
 });
-
 
 
 app.listen(PORT);
