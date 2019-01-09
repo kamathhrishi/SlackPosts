@@ -30,7 +30,7 @@ Go to a Web Browser and run
 localhost:3000
 ```
 
-Ensure a mongodb instance is running with a database named BLOG or change database according to your convienience under this parameters in app.js file. 
+Ensure a mongodb instance is running with a database named BLOG or change database according to your convienience under this parameter in app.js file. 
 
 
 ```
