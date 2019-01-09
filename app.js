@@ -35,7 +35,15 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.get('/',function(req,res){
 
 
-      res.render('Index');
+      res.render('Index',{Error_Message:""});
+
+
+});
+
+app.get('/Register',function(req,res){
+
+
+      res.render('Register',{Error_Message:""});
 
 
 });
@@ -43,14 +51,44 @@ app.get('/',function(req,res){
 //Post request that saves users information onto a database
 app.post('/AddUser',urlencodedParser,function(req,res){
 
-  users.AddUser({UserName:req.body.username,password:req.body.pswd,title:req.body.title},function(err,user){
+  if(req.body.username.length>5){
 
-             if(err){
+      if(req.body.pswd.length>7){
 
-                throw err;
+        if(req.body.pswd==req.body.pswda){
 
-             }
-  });
+          users.AddUser({UserName:req.body.username,password:req.body.pswd,title:req.body.title},function(err,user){
+
+                if(err){
+
+                    throw err;
+
+                }
+
+                res.render('Index',{Error_Message:""})
+
+         });
+
+      }
+      else{
+
+          res.render('Register',{Error_Message:"Passwords do not match"});
+
+      }
+    }
+    else{
+
+         res.render('Register',{Error_Message:"Password length should be above 7"});
+
+    }
+
+  }
+  else{
+
+        res.render('Register',{Error_Message:"User name length should be above 5"});
+
+
+  }
 
 });
 
@@ -85,16 +123,35 @@ app.get('/CreatePost',function(req,res){
 
   if(Login==true){
 
-        res.render('CreatePost');
+        res.render('CreatePost',{Error_Message:"You must first login to view this page"});
 
   }
 
   else{
 
-        res.render('Index');
+        res.render('Index',{Error_Message:"You must first login to view this page"});
         alert("You must first login");
 
   }
+
+});
+
+app.get('/Logout',function(req,res){
+
+
+        Login=false;
+        LoggedInUser=null;
+
+        if(Login==true){
+
+                     res.render('Index',{Error_Message:""});
+
+        }
+        else{
+
+                     res.render('Index',{Error_Message:"You must first login to logout :P "});
+
+        }
 
 });
 
@@ -118,7 +175,7 @@ app.get('/UserPost',function(req,res){
 
  else{
 
-   res.render('Index');
+   res.render('Index',{Error_Message:"You must first login to view this page"});
    alert("You must first login");
 
  }
@@ -130,7 +187,11 @@ app.get('/UserPost',function(req,res){
 app.post('/CreatePost',urlencodedParser,function(req,res){
 
 if(Login==true){
-  Posts.AddPost({User:LoggedInUser[0].UserName,UserTitle:LoggedInUser[0].title,title:req.body.post_title,content:req.body.post_body},function(err,post){
+
+  if(req.body.post_body.length>30){
+
+    if(5<req.body.post_title.length<20){
+     Posts.AddPost({User:LoggedInUser[0].UserName,UserTitle:LoggedInUser[0].title,title:req.body.post_title,content:req.body.post_body},function(err,post){
 
             if(err){
 
@@ -145,11 +206,24 @@ if(Login==true){
             })
 
 
-  });
+    });
+    }
+    else{
+
+           res.render('CreatePost',{Error_Message:"Your post title must be less than 15 charecters and more than 5 charecters"});
+
+    }
+  }
+   else{
+
+         res.render('CreatePost',{Error_Message:"Your post length must be more than 30 charecters"});
+
+  }
 }
+
 else{
 
-  res.render('Index');
+  res.render('Index',{Error_Message:"You must first login to view this page"});
   alert("You must first login");
 
 }
@@ -170,7 +244,7 @@ app.get('/Posts',function(req,res){
              }
              else{
 
-               res.render('Index');
+               res.render('Index',{Error_Message:"You must first login to view this page"});
                alert("You must first login");
 
              }

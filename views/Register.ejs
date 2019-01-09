@@ -62,37 +62,67 @@
   </br>
 
   <div class="row">
-  <div class="col"></div>
-  <div class="col"><div class="card-deck">
+  <div class="col-sm-2"></div>
+  <div class="col-sm-8">
+
+   <div class="card-deck">
     <div class="card bg-light">
       <div class="card-body text-center">
       <div class="bg-danger text-white">
          <%= Error_Message %>
       </div>
       </br>
-        <h3 class="card-text">Login</h3>
+        <h2 class="card-text">Register</h2>
       </br>
-        <form action="/Login" method="POST">
-        <div class="form-group">
-            <label for="text">User Name:</label>
-            <input type="text" class="form-control" name="login_user">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <b class="modal-title">Register Now for Free!</b>
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+          </div>
+
+          <div class="modal-body">
+            <form action="/AddUser" method="POST">
+            <div class="form-group">
+                 <label for="text">User Name:</label>
+                 <input type="text" class="form-control" id="email" placeholder="An appropriate username" name="username">
+            </div>
+            <div class="form-group">
+                 <label for="text">Title:</label>
+                <input type="text" class="form-control" id="pwd" placeholder="A short summary that describes you" name="title">
+            </div>
+            <div class="form-group">
+                 <label for="pwd">Password:</label>
+                <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswd">
+            </div>
+            <div class="form-group">
+                 <label for="pwd">Password Again:</label>
+                <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pswda">
+            </div>
+
+            <button type="submit" class="btn btn-success">Register</button>
+            </form>
+          </div>
+
+
+          <div class="modal-footer">
+            <a href="/"><button type="button" class="btn btn-danger" data-dismiss="modal">Back</button></a>
+          </div>
+
         </div>
-        <div class="form-group">
-            <label for="pwd">Password:</label>
-            <input type="password" class="form-control" name="login_pwd">
-        </div>
-      </br>
-        <button type="submit" class="btn btn-primary">Login</button>
-      </br>
-    </br>
-  </br>
-  <a href="/Register"><button type="button" class="btn btn-success" data-toggle="modal" data-target="#myModal">Register</button></a>
-       </form>
+      </div>
       </div>
     </div>
   </div></div>
-  <div class="col"></div>
 </div>
+
+</br>
+</br>
+</br>
+</br>
+
 </div>
 
 </body>
