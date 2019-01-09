@@ -11,9 +11,8 @@ Other dependencies:
   <li>Mongoose</li>
   <li>BodyParser</li>
   <li>express</li>
+  <li>MongoDB</li>
 </ul>
-
-By default runs on 
 
 
 
@@ -29,4 +28,11 @@ Go to a Web Browser and run
 
 ```
 localhost:3000
+```
+
+Ensure a mongodb instance is running with a database named BLOG or change database according to your convienience under this parameters in app.js file. 
+
+
+```
+const Database_Connection='mongodb://localhost:27017/BLOG';
 ```
