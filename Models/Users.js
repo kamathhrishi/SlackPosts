@@ -5,11 +5,9 @@ const mongoose=require('mongoose');
 //Define schema of users collection
 const Schema=mongoose.Schema;
 var UserSchema=new Schema({
-
      UserName:String,
      password:String,
      title:String
-
 });
 
 

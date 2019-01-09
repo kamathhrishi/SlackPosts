@@ -107,13 +107,13 @@ app.post('/Login',urlencodedParser,function(req,res){
             }
 
             if(user_valid){
-            LoggedInUser=user_valid;
             console.log("Logged in?");
 
             Posts.find({}).then(function(posts){
 
 
                   console.log(user_valid);
+                  LoggedInUser=user_valid;
                   Login=true;
                   res.render('Dash',{Dash_Posts:posts,UserName:req.body.login_user});
 
@@ -198,7 +198,7 @@ if(Login==true){
   if(req.body.post_body.length>30){
 
     if(5<req.body.post_title.length<20){
-     Posts.AddPost({User:LoggedInUser[0].UserName,UserTitle:LoggedInUser[0].title,title:req.body.post_title,content:req.body.post_body},function(err,post){
+     Posts.AddPost({User:LoggedInUser.UserName,UserTitle:LoggedInUser.title,title:req.body.post_title,content:req.body.post_body},function(err,post){
 
             if(err){
 
@@ -208,7 +208,7 @@ if(Login==true){
             console.log(LoggedInUser);
             Posts.find({}).then(function(posts){
 
-                  res.render('Dash',{Dash_Posts:posts,UserName:LoggedInUser[0].UserName});
+                  res.render('Dash',{Dash_Posts:posts,UserName:LoggedInUser.UserName});
 
             })
 
