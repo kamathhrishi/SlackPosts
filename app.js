@@ -260,3 +260,4 @@ app.get('/Posts',function(req,res){
 
 
 app.listen(PORT);
+console.log("Listening to requests on Port "+PORT);
