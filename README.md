@@ -36,3 +36,9 @@ Ensure a mongodb instance is running with a database named BLOG or change databa
 ```
 const Database_Connection='mongodb://localhost:27017/BLOG';
 ```
+
+<h1>Usage</h1>
+
+1.
+
+<img src="Usage/1.png"></img>
