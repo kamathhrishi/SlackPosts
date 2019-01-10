@@ -244,7 +244,8 @@ app.get('/Posts',function(req,res){
 
                Posts.find({}).then(function(posts){
 
-                     res.render('Dash',{Dash_Posts:posts,UserName:LoggedInUser[0].UserName});
+                     console.log("YES");
+                     res.render('Dash',{Dash_Posts:posts,UserName:LoggedInUser.UserName});
 
                });
 
